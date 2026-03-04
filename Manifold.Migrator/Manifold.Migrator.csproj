@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>dotnet-Manifold.Migrator-5455c198-8d15-48cc-9b32-f5b1f7ca7a1f</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.1.2" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.1"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\Manifold.ServiceDefaults\Manifold.ServiceDefaults.csproj"/>
+        <ProjectReference Include="..\Manifold.Api\Manifold.Api.csproj"/>
+    </ItemGroup>
+</Project>

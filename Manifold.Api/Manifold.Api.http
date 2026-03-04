@@ -1,0 +1,6 @@
+@Manifold.Api_HostAddress = http://localhost:5004
+
+GET {{Manifold.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Manifold.Api/Manifold.Api.csproj" />
+  <Project Path="Manifold.AppHost/Manifold.AppHost.csproj" />
+  <Project Path="Manifold.Migrator/Manifold.Migrator.csproj" />
+  <Project Path="Manifold.ServiceDefaults/Manifold.ServiceDefaults.csproj" />
+</Solution>
