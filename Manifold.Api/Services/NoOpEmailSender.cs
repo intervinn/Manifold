@@ -1,7 +1,7 @@
 using Manifold.Api.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 
-namespace Manifold.Api.Services.Implementations;
+namespace Manifold.Api.Services;
 
 public class NoOpEmailSender : IEmailSender<IdentityUser>
 {

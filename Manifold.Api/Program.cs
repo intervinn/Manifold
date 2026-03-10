@@ -1,5 +1,6 @@
 using Manifold.Api.Data;
-using Manifold.Api.Services.Implementations;
+using Manifold.Api.Services;
+using Manifold.Api.Services.Buckets;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,16 +8,21 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-// Add services to the container.
+//================= Routing
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
+//================= Data
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("Manifold"));
 });
-//builder.Services.AddSingleton<IEmailSender<IdentityUser>, NoOpEmailSender>(); 
-builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+
+builder.Services.AddHostedService<BucketService>();
+
+//================= Authentication
+builder.Services.AddIdentityApiEndpoints<IdentityUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
     options.SignIn.RequireConfirmedEmail = false;
@@ -27,8 +33,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
 })
+    .AddApiEndpoints()
     .AddEntityFrameworkStores<ApplicationDbContext>();
-
 
 builder.Services.AddAuthorization();
 
@@ -40,8 +46,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
 });
-
-builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 var app = builder.Build();
 
