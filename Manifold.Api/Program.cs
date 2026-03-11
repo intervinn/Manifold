@@ -18,8 +18,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("Manifold"));
 });
-
-builder.Services.AddHostedService<BucketService>();
+builder.Services.AddSingleton<BucketService>();
+builder.Services.AddHostedService<BucketService>(provider => provider.GetRequiredService<BucketService>());
 
 //================= Authentication
 builder.Services.AddIdentityApiEndpoints<IdentityUser>(options =>
@@ -32,6 +32,7 @@ builder.Services.AddIdentityApiEndpoints<IdentityUser>(options =>
     options.Password.RequireLowercase = false;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 6;
 })
     .AddApiEndpoints()
     .AddEntityFrameworkStores<ApplicationDbContext>();

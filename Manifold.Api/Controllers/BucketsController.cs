@@ -70,24 +70,67 @@ public class BucketsController : ControllerBase
         {
             return BadRequest();
         }
-        
 
-        var entry = await _dbContext.Buckets.AddAsync(new Bucket()
+        try
         {
-            DriverType = body.DriverType,
-            Name = body.Name,
-            Description = body.Description,
-            ConnectionString = body.ConnectionString,
-        });
+            var entry = await _dbContext.Buckets.AddAsync(new Bucket()
+            {
+                DriverType = body.DriverType,
+                Name = body.Name,
+                Description = body.Description,
+                ConnectionString = body.ConnectionString,
+            });
 
-        var bucket = entry.Entity;
-        _bucketService.UpdateDriver(bucket);
-        await _dbContext.SaveChangesAsync();
-
-        return Ok(new ApiResponse<PartialBucket>()
+            var bucket = entry.Entity;
+            _bucketService.UpdateDriver(bucket);
+            await _dbContext.SaveChangesAsync();
+            
+            return Ok(new ApiResponse<PartialBucket>()
+            {
+                Success = true,
+                Data = PartialBucket.From(bucket)
+            });
+        }
+        catch (Exception e)
         {
-            Success = true,
-            Data = PartialBucket.From(bucket)
-        });
+            _logger.LogError(e, "Failed to create bucket");
+            return BadRequest();
+        }
+    }
+
+    [Authorize]
+    [HttpPost("{bucketId}/update")]
+    public async Task<IActionResult> UpdateBucket(string bucketId, [FromBody] CreateBucketBody body)
+    {
+        var entry = await _dbContext.Buckets.Where(v => v.Id.ToString() == bucketId).FirstOrDefaultAsync();
+        if (entry == null)
+        {
+            return BadRequest(new ApiResponse()
+            {
+                Success = false,
+                Message = "Bucket not found"
+            });
+        }
+
+        try
+        {
+            _dbContext.Entry(entry).CurrentValues.SetValues(body);
+            await _dbContext.SaveChangesAsync();
+            _bucketService.UpdateDriver(entry);
+            return Ok(new ApiResponse()
+            {
+                Success = true,
+                Message = "Bucket updated successfully"
+            });
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Failed to update bucket");
+            return BadRequest(new ApiResponse()
+            {
+                Success = false,
+                Message = e.Message
+            });
+        }
     }
 }

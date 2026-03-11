@@ -20,7 +20,10 @@ public class S3BucketDriver : IBucketDriver
     /// <exception cref="JsonException">connection string is an invalid JSON</exception>
     public S3BucketDriver(string connectionString)
     {
-        var options = JsonSerializer.Deserialize<S3Options>(connectionString);
+        var options = JsonSerializer.Deserialize<S3Options>(connectionString, new JsonSerializerOptions()
+        {
+            PropertyNameCaseInsensitive = true,
+        });
         if (options == null)
         {
             throw new ArgumentException("Invalid connection string", nameof(connectionString));
@@ -30,9 +33,10 @@ public class S3BucketDriver : IBucketDriver
         {
             ServiceURL = options.ServiceURL,
             AuthenticationRegion = options.BucketRegion,
-            ForcePathStyle = options.ForcePathStyle
+            ForcePathStyle = options.ForcePathStyle,
         };
         
+        Console.WriteLine($"Connecting to {options.ServiceURL} in {options.BucketRegion}");
         _client = new AmazonS3Client(options.AccessKeyId, options.SecretAccessKey, config);
         _transferUtility = new TransferUtility(_client);
         _bucketName = options.BucketName;
@@ -43,7 +47,7 @@ public class S3BucketDriver : IBucketDriver
         var request = new TransferUtilityUploadRequest()
         {
             BucketName = _bucketName,
-            Key = meta.Filename,
+            Key = meta.Id.ToString(),
             InputStream = content,
             ContentType = meta.ContentType,
             AutoCloseStream = true,

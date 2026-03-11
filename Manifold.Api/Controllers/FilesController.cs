@@ -1,3 +1,4 @@
+using Amazon.S3;
 using Manifold.Api.Data;
 using Manifold.Api.Data.DTO;
 using Manifold.Api.Data.Entities;
@@ -52,22 +53,36 @@ public class FilesController : ControllerBase
         
         var metaEntry = await _dbContext.Metas.AddAsync(new FileMeta()
         {
-            Filename = form.File.Name,
+            Filename = form.File.FileName,
             ContentType = form.File.ContentType,
             ContentLength = form.File.Length,
             Bucket = bucket
         });
         
         var meta = metaEntry.Entity;
-        
-        await using var stream = form.File.OpenReadStream();
-        await driver.UploadAsync(meta, stream);
-        return Ok(new ApiResponse<FileMeta>()
+
+        try
         {
-            Success = true,
-            Message = "File successfully uploaded",
-            Data = meta
-        });
+            await using var stream = form.File.OpenReadStream();
+            await driver.UploadAsync(meta, stream);
+            await _dbContext.SaveChangesAsync();
+            return Ok(new ApiResponse<FileMeta>()
+            {
+                Success = true,
+                Message = "File successfully uploaded",
+                Data = meta
+            });
+        }
+        catch (AmazonS3Exception e)
+        {
+            _logger.LogError(e, "Failed to upload S3 file");
+            _logger.LogInformation($"Message: {e.Message}; Status: {e.StatusCode}; Error: {e.ErrorCode}; Data: {e.Data}");
+            return BadRequest(new ApiResponse()
+            {
+                Success = false,
+                Message = e.Message
+            });
+        }
     }
 
     [HttpGet("bucket/{bucket}")]
