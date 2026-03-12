@@ -1,8 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Net.Mime;
 
-namespace Manifold.Api.Data.Entities;
+namespace Manifold.Data.Entities;
 
 public class FileMeta
 {

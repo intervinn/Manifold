@@ -1,4 +1,4 @@
-namespace Manifold.Api.Data.DTO;
+namespace Manifold.Api.DTO;
 
 [Serializable]
 public sealed class ApiResponse<T>

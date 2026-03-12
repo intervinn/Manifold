@@ -1,6 +1,6 @@
-using Manifold.Api.Data.Entities;
+using Manifold.Data.Entities;
 
-namespace Manifold.Api.Data.DTO;
+namespace Manifold.Api.DTO;
 
 public class PartialBucket
 {

@@ -1,10 +1,9 @@
-using Amazon.S3.Transfer;
-using Manifold.Api.Data.Entities;
+using Manifold.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Manifold.Api.Data;
+namespace Manifold.Data;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
     : IdentityDbContext<IdentityUser>(options)

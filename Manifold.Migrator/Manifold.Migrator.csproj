@@ -14,6 +14,6 @@
     
     <ItemGroup>
         <ProjectReference Include="..\Manifold.ServiceDefaults\Manifold.ServiceDefaults.csproj"/>
-        <ProjectReference Include="..\Manifold.Api\Manifold.Api.csproj"/>
+        <ProjectReference Include="..\Manifold.Data\Manifold.Data.csproj"/>
     </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Manifold.Api.Data.DTO;
+namespace Manifold.Api.DTO;
 
 [Serializable]
 public class UploadFileForm

@@ -1,7 +1,7 @@
 using Amazon.S3;
-using Manifold.Api.Data;
-using Manifold.Api.Data.DTO;
-using Manifold.Api.Data.Entities;
+using Manifold.Data;
+using Manifold.Data.Entities;
+using Manifold.Api.DTO;
 using Manifold.Api.Services.Buckets;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -66,11 +66,11 @@ public class FilesController : ControllerBase
             await using var stream = form.File.OpenReadStream();
             await driver.UploadAsync(meta, stream);
             await _dbContext.SaveChangesAsync();
-            return Ok(new ApiResponse<FileMeta>()
+            return Ok(new ApiResponse<PartialMeta>()
             {
                 Success = true,
                 Message = "File successfully uploaded",
-                Data = meta
+                Data = PartialMeta.From(meta)
             });
         }
         catch (AmazonS3Exception e)

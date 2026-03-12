@@ -1,4 +1,3 @@
-using Manifold.Api.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace Manifold.Api.Services;

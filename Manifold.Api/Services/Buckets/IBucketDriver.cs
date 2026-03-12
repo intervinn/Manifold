@@ -1,4 +1,4 @@
-using Manifold.Api.Data.Entities;
+using Manifold.Data.Entities;
 
 namespace Manifold.Api.Services.Buckets;
 
