@@ -17,6 +17,7 @@ var api = builder.AddProject<Projects.Manifold_Api>("Api")
     .WithReference(migrator)
     .WaitForCompletion(migrator);
 
+
 builder.AddViteApp("App", "../Manifold.App")
     .WithEnvironment("VITE_API_URL", api.GetEndpoint("https"))
     .WithReference(api)
